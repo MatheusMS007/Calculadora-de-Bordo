@@ -1,0 +1,31 @@
+{
+  "name": "calculadora-de-bordo",
+  "version": "1.0.0",
+  "description": "Sistema para controle de gastos e metas financeiras para motoristas de aplicativo.",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MatheusMS007/Calculadora-de-Bordo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/MatheusMS007/Calculadora-de-Bordo/issues"
+  },
+  "homepage": "https://github.com/MatheusMS007/Calculadora-de-Bordo#readme",
+  "dependencies": {
+    "ejs": "^6.0.1",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "sqlite3": "^6.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

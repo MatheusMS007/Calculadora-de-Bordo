@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Novo Ganho</title>
+</head>
+<body>
+
+    <h1>Cadastrar Ganho</h1>
+
+    <!-- Mensagem de erro -->
+    <% if (typeof erro !== 'undefined') { %>
+        <p style="color:red;"><%= erro %></p>
+    <% } %>
+
+    <form action="/ganhos" method="POST">
+
+        <div>
+            <label>Data:</label>
+            <input type="date" name="data" required>
+        </div>
+
+        <br>
+
+        <div>
+            <label>Plataforma:</label>
+            <select name="plataforma" required>
+                <option value="">Selecione</option>
+                <option value="Uber">Uber</option>
+                <option value="99">99</option>
+            </select>
+        </div>
+
+        <br>
+
+        <div>
+            <label>Valor (R$):</label>
+            <input type="number" step="0.01" name="valor" required>
+        </div>
+
+        <br>
+
+        <div>
+            <label>Horas trabalhadas:</label>
+            <input type="number" step="0.1" name="horas">
+        </div>
+
+        <br>
+
+        <div>
+            <label>KM rodados:</label>
+            <input type="number" step="0.1" name="km">
+        </div>
+
+        <br>
+
+        <button type="submit">Salvar ganho</button>
+
+    </form>
+
+    <br>
+
+    <a href="/ganhos">Ver ganhos</a>
+    <br>
+    <a href="/dashboard">Voltar ao dashboard</a>
+
+</body>
+</html>
