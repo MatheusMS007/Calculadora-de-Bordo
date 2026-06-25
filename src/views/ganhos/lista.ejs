@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Meus Ganhos</title>
+</head>
+<body>
+
+    <h1>Meus Ganhos</h1>
+
+    <a href="/dashboard">Dashboard</a>
+    |
+    <a href="/ganhos/novo">Novo Ganho</a>
+    |
+    <a href="/logout">Sair</a>
+
+    <hr>
+
+    <table border="1">
+
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Plataforma</th>
+                <th>Valor</th>
+                <th>Horas</th>
+                <th>KM</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <% ganhos.forEach(ganho => { %>
+
+                <tr>
+
+                    <td><%= ganho.data %></td>
+
+                    <td><%= ganho.plataforma %></td>
+
+                    <td>
+                        R$ <%= Number(ganho.valor).toFixed(2) %>
+                    </td>
+
+                    <td><%= ganho.horas %></td>
+
+                    <td><%= ganho.km %></td>
+
+                </tr>
+
+            <% }) %>
+
+        </tbody>
+
+    </table>
+
+</body>
+</html>

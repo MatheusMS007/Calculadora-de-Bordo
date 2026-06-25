@@ -1,4 +1,5 @@
 const userModel = require('../models/userModel')
+const ganhoModel = require('../models/ganhoModel')
 
 // serve para criar funções de autenticação
 const authController = {
@@ -61,9 +62,21 @@ const authController = {
             return res.redirect('/login')
     }
 
-    res.render('dashboard', {
-        usuario: req.session.usuario
-    })
+            ganhoModel.getResumoByUser(
+                req.session.usuario.id,
+                (err, resumo) => {
+                    if(err) {
+                        console.log(err)
+                        return res.send('Erro na busca do dashboard!')
+                    }
+
+                    res.render('dashboard', {
+                        usuario: req.session.usuario,
+                        resumo
+                    })
+                }
+            )
+    }
 }
-}
+
 module.exports = authController

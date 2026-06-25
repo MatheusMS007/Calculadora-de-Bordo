@@ -1,7 +1,7 @@
 const express = require('express')
 const path = require('path')
 const session = require('express-session')
-const ganhoRoutes = require('/routes/ganhoRoutes')
+const ganhoRoutes = require('./routes/ganhoRoutes')
 
 require('./database/connection') // serve para criar conexão com banco de dados
 

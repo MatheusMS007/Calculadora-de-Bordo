@@ -8,7 +8,29 @@
 
     <h1>Bem-vindo, <%= usuario.username %></h1>
 
-    <h2>Dashboard inicial funcionando 🎉</h2>
+    <hr>
+
+    <h2>Resumo Financeiro</h2>
+
+    <p>
+        Total faturado:
+        R$ <%= Number(resumo.totalGanhos).toFixed(2) %>
+    </p>
+
+    <p>
+        Registros cadastrados:
+        <%= resumo.totalRegistros %>
+    </p>
+
+    <hr>
+
+    <a href="/ganhos/novo">Cadastrar ganho</a>
+
+    <br><br>
+
+    <a href="/ganhos">Ver ganhos</a>
+
+    <br><br>
 
     <a href="/logout">Sair</a>
 
