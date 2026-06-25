@@ -1,0 +1,23 @@
+# Dependências do Node
+node_modules/
+
+# Banco SQLite
+src/database/database.sqlite
+
+# Variáveis de ambiente
+.env
+
+# Logs
+*.log
+logs/
+
+# Arquivos temporários do sistema
+.DS_Store
+Thumbs.db
+
+# Configurações locais do VS Code
+.vscode/
+
+# Arquivos de build
+dist/
+build/
