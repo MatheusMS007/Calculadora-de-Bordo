@@ -28,6 +28,18 @@ db.serialize(() => {
         )
     `);
 
+    // Tokens usados pela API mobile; somente o hash do token fica salvo.
+    db.run(`
+        CREATE TABLE IF NOT EXISTS api_tokens (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            usuario_id INTEGER NOT NULL,
+            token_hash TEXT UNIQUE NOT NULL,
+            expires_at TEXT NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY(usuario_id) REFERENCES usuarios(id)
+        )
+    `);
+
     // Cria a tabela de ganhos
     db.run(`
         CREATE TABLE IF NOT EXISTS ganhos (

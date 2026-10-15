@@ -2,6 +2,7 @@ const express = require('express')
 const path = require('path')
 const session = require('express-session')
 const ganhoRoutes = require('./routes/ganhoRoutes')
+const apiRoutes = require('./routes/apiRoutes')
 
 require('./database/connection') // serve para criar conexão com banco de dados
 
@@ -32,6 +33,7 @@ app.use(express.static(path.join(__dirname, '..', 'public')))
 // rotas
 app.use(authRoutes)
 app.use(ganhoRoutes)
+app.use('/api', apiRoutes)
 
 // rota inicial
 app.get('/', (req, res) => {
