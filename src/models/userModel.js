@@ -13,11 +13,19 @@ const userModel = {
 // serve para criar função de inserir usuário no banco de dados
  create: (user, callback) => {
         const sql =
-            'INSERT INTO usuarios (username, senha, perfil) VALUES (?, ?, ?)'
+            'INSERT INTO usuarios (username, senha, nome, perfil) VALUES (?, ?, ?, ?)'
 
-        db.run(sql, [user.username, user.senha, user.perfil], function (err) {
+        db.run(sql, [user.username, user.senha, user.nome, user.perfil], function (err) {
             callback(err, this?.lastID)
         })
+    },
+
+    updatePassword: (userId, senha, callback) => {
+        db.run('UPDATE usuarios SET senha = ? WHERE id = ?', [senha, userId], callback)
+    },
+
+    updateName: (userId, nome, callback) => {
+        db.run('UPDATE usuarios SET nome = ? WHERE id = ?', [nome, userId], callback)
     }
 }
 

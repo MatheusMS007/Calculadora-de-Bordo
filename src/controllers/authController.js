@@ -1,5 +1,6 @@
 const userModel = require('../models/userModel')
 const ganhoModel = require('../models/ganhoModel')
+const { hashPassword, verifyPassword, isLegacyPassword } = require('../utils/password')
 
 // serve para criar funções de autenticação
 const authController = {
@@ -31,20 +32,35 @@ const authController = {
                 })
             }
 
-            if(senha !== usuario.senha) {
-                return res.render('auth/login', {
-                    erro: 'Senha incorreta'
-                })
-            }
+            verifyPassword(senha, usuario.senha).then((passwordIsValid) => {
+                if(!passwordIsValid) {
+                    return res.render('auth/login', { erro: 'Senha incorreta' })
+                }
 
-            req.session.usuario = {
-                id: usuario.id,
-                username: usuario.username,
-                perfil: usuario.perfil
-            }
+                const continueLogin = () => {
+                    req.session.usuario = {
+                        id: usuario.id,
+                        username: usuario.username,
+                        perfil: usuario.perfil
+                    }
+                    res.redirect('/dashboard')
+                }
 
-            // serve para redirecionar para a página de dashboard
-            res.redirect('/dashboard')
+                if(!isLegacyPassword(usuario.senha)) return continueLogin()
+
+                hashPassword(senha)
+                    .then((newHash) => userModel.updatePassword(usuario.id, newHash, (updateErr) => {
+                        if(updateErr) console.error('Não foi possível atualizar o hash da senha legada:', updateErr)
+                        continueLogin()
+                    }))
+                    .catch((hashErr) => {
+                        console.error('Não foi possível proteger a senha legada:', hashErr)
+                        continueLogin()
+                    })
+            }).catch((verifyErr) => {
+                console.error('Erro ao verificar senha:', verifyErr)
+                res.render('auth/login', { erro: 'Não foi possível validar a senha.' })
+            })
         })
     },
 

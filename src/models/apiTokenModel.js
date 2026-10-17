@@ -11,7 +11,7 @@ const apiTokenModel = {
 
     findValid(tokenHash, callback) {
         db.get(
-            `SELECT usuarios.id, usuarios.username, usuarios.perfil
+            `SELECT usuarios.id, usuarios.username, usuarios.nome, usuarios.perfil
              FROM api_tokens
              JOIN usuarios ON usuarios.id = api_tokens.usuario_id
              WHERE api_tokens.token_hash = ? AND api_tokens.expires_at > ?`,

@@ -40,6 +40,19 @@ db.serialize(() => {
         )
     `);
 
+    db.run(`
+        CREATE TABLE IF NOT EXISTS expo_push_tokens (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            usuario_id INTEGER NOT NULL,
+            token TEXT UNIQUE NOT NULL,
+            platform TEXT NOT NULL,
+            device_name TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY(usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+        )
+    `);
+
     // Cria a tabela de ganhos
     db.run(`
         CREATE TABLE IF NOT EXISTS ganhos (

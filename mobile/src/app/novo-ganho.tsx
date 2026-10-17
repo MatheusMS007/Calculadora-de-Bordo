@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, Vibration, View } from 'react-native'
 import { router } from 'expo-router'
 import { useSQLiteContext } from 'expo-sqlite'
 import { useAuth } from '@/src/contexts/AuthContext'
 import { cacheGanho } from '@/src/database/ganhosRepository'
 import { apiRequest } from '@/src/services/api'
+import { colors } from '@/src/constants/theme'
 
 function todayAsIsoDate() {
   const today = new Date()
@@ -50,6 +51,7 @@ export default function NovoGanhoScreen() {
       } catch (cacheError) {
         console.warn('O ganho foi salvo no servidor, mas não foi possível atualizar o cache local:', cacheError)
       }
+      Vibration.vibrate(250)
       router.back()
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : 'Não foi possível salvar o ganho.')
@@ -74,7 +76,7 @@ export default function NovoGanhoScreen() {
             value={data}
             onChangeText={setData}
             placeholder="2026-10-15"
-            placeholderTextColor="#98a39d"
+            placeholderTextColor={colors.placeholder}
             keyboardType="numbers-and-punctuation"
             maxLength={10}
           />
@@ -87,7 +89,7 @@ export default function NovoGanhoScreen() {
             value={plataforma}
             onChangeText={setPlataforma}
             placeholder="Uber, 99..."
-            placeholderTextColor="#98a39d"
+            placeholderTextColor={colors.placeholder}
             autoCapitalize="words"
             returnKeyType="next"
           />
@@ -100,7 +102,7 @@ export default function NovoGanhoScreen() {
             value={valor}
             onChangeText={setValor}
             placeholder="Ex.: 185,50"
-            placeholderTextColor="#98a39d"
+            placeholderTextColor={colors.placeholder}
             keyboardType="decimal-pad"
           />
         </View>
@@ -113,7 +115,7 @@ export default function NovoGanhoScreen() {
               value={horas}
               onChangeText={setHoras}
               placeholder="Ex.: 6,5"
-              placeholderTextColor="#98a39d"
+              placeholderTextColor={colors.placeholder}
               keyboardType="decimal-pad"
             />
           </View>
@@ -124,7 +126,7 @@ export default function NovoGanhoScreen() {
               value={km}
               onChangeText={setKm}
               placeholder="Ex.: 120"
-              placeholderTextColor="#98a39d"
+              placeholderTextColor={colors.placeholder}
               keyboardType="decimal-pad"
             />
           </View>
@@ -146,19 +148,19 @@ export default function NovoGanhoScreen() {
 }
 
 const styles = StyleSheet.create({
-  flex: { flex: 1 },
-  container: { flexGrow: 1, padding: 24, paddingBottom: 40, backgroundColor: '#f5f7f6' },
-  title: { color: '#18231f', fontSize: 26, fontWeight: '800' },
-  subtitle: { marginTop: 8, marginBottom: 24, color: '#65736c', fontSize: 14 },
+  flex: { flex: 1, backgroundColor: colors.background },
+  container: { flexGrow: 1, padding: 24, paddingBottom: 40, backgroundColor: colors.background },
+  title: { color: colors.text, fontSize: 26, fontWeight: '800' },
+  subtitle: { marginTop: 8, marginBottom: 24, color: colors.textSecondary, fontSize: 14 },
   field: { marginBottom: 18 },
-  label: { marginBottom: 8, color: '#34423a', fontSize: 14, fontWeight: '700' },
-  hint: { color: '#718078', fontSize: 12, fontWeight: '400' },
-  input: { minHeight: 52, paddingHorizontal: 15, borderWidth: 1, borderColor: '#dce4df', borderRadius: 13, color: '#18231f', backgroundColor: '#ffffff', fontSize: 16 },
+  label: { marginBottom: 8, color: colors.text, fontSize: 14, fontWeight: '700' },
+  hint: { color: colors.textMuted, fontSize: 12, fontWeight: '400' },
+  input: { minHeight: 52, paddingHorizontal: 15, borderWidth: 1, borderColor: colors.border, borderRadius: 13, color: colors.text, backgroundColor: colors.surface, fontSize: 16 },
   row: { flexDirection: 'row', gap: 14 },
   halfField: { flex: 1 },
-  error: { marginBottom: 16, color: '#a72e32', fontSize: 14, lineHeight: 20 },
-  button: { minHeight: 56, marginTop: 4, alignItems: 'center', justifyContent: 'center', borderRadius: 14, backgroundColor: '#0e7c66' },
+  error: { marginBottom: 16, color: colors.danger, fontSize: 14, lineHeight: 20 },
+  button: { minHeight: 56, marginTop: 4, alignItems: 'center', justifyContent: 'center', borderRadius: 14, borderWidth: 1, borderColor: colors.primaryBorder, backgroundColor: colors.primary },
   buttonPressed: { opacity: 0.82 },
   buttonDisabled: { opacity: 0.5 },
-  buttonText: { color: '#ffffff', fontSize: 16, fontWeight: '800' },
+  buttonText: { color: colors.text, fontSize: 16, fontWeight: '800' },
 })

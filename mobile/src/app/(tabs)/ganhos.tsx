@@ -5,6 +5,7 @@ import { useSQLiteContext } from 'expo-sqlite'
 import { useAuth } from '@/src/contexts/AuthContext'
 import { getCachedGanhos, replaceCachedGanhos, type Ganho } from '@/src/database/ganhosRepository'
 import { apiRequest } from '@/src/services/api'
+import { colors } from '@/src/constants/theme'
 
 function formatDate(value: string) {
   const [year, month, day] = value.split('-')
@@ -58,7 +59,7 @@ export default function GanhosScreen() {
     void Promise.resolve().then(loadGanhos)
   }, [loadGanhos]))
 
-  if (loading && ganhos.length === 0) return <ActivityIndicator style={styles.loading} size="large" color="#0e7c66" />
+  if (loading && ganhos.length === 0) return <ActivityIndicator style={styles.loading} size="large" color={colors.text} />
 
   return (
     <FlatList
@@ -75,7 +76,7 @@ export default function GanhosScreen() {
           {offline && <Text style={styles.notice}>Sem conexão com o servidor. Exibindo os últimos dados salvos neste aparelho.</Text>}
           {!!error && <Text accessibilityRole="alert" style={styles.error}>{error}</Text>}
           {!!error && <Pressable onPress={() => void loadGanhos()} style={styles.retry}><Text style={styles.retryText}>Tentar novamente</Text></Pressable>}
-          {loading && ganhos.length > 0 && <ActivityIndicator size="small" color="#0e7c66" />}
+          {loading && ganhos.length > 0 && <ActivityIndicator size="small" color={colors.text} />}
         </View>
       }
       ListEmptyComponent={<Text style={styles.empty}>{error ? 'Não foi possível carregar os registros.' : 'Ainda não há ganhos registrados.'}</Text>}
@@ -97,23 +98,23 @@ export default function GanhosScreen() {
 }
 
 const styles = StyleSheet.create({
-  list: { flex: 1, backgroundColor: '#f5f7f6' },
+  list: { flex: 1, backgroundColor: colors.background },
   content: { padding: 18, gap: 12 },
   emptyContent: { flexGrow: 1, justifyContent: 'center', padding: 24 },
   listHeader: { gap: 14, marginBottom: 4 },
-  intro: { color: '#65736c', fontSize: 15 },
-  addButton: { minHeight: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 13, backgroundColor: '#0e7c66' },
-  addButtonText: { color: '#ffffff', fontSize: 15, fontWeight: '700' },
-  card: { padding: 18, borderRadius: 16, backgroundColor: '#ffffff' },
+  intro: { color: colors.textSecondary, fontSize: 15 },
+  addButton: { minHeight: 50, alignItems: 'center', justifyContent: 'center', borderRadius: 13, borderWidth: 1, borderColor: colors.primaryBorder, backgroundColor: colors.primary },
+  addButtonText: { color: colors.text, fontSize: 15, fontWeight: '700' },
+  card: { padding: 18, borderRadius: 16, backgroundColor: colors.surface },
   row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 12 },
-  platform: { color: '#18231f', fontSize: 16, fontWeight: '700' },
-  date: { marginTop: 5, color: '#718078', fontSize: 13 },
-  value: { color: '#0e7c66', fontSize: 16, fontWeight: '800' },
-  details: { marginTop: 12, color: '#65736c', fontSize: 13 },
-  empty: { color: '#65736c', fontSize: 16, textAlign: 'center', lineHeight: 24 },
-  notice: { color: '#805b10', fontSize: 13, lineHeight: 19 },
+  platform: { color: colors.text, fontSize: 16, fontWeight: '700' },
+  date: { marginTop: 5, color: colors.textMuted, fontSize: 13 },
+  value: { color: colors.text, fontSize: 16, fontWeight: '800' },
+  details: { marginTop: 12, color: colors.textSecondary, fontSize: 13 },
+  empty: { color: colors.textSecondary, fontSize: 16, textAlign: 'center', lineHeight: 24 },
+  notice: { color: colors.warning, fontSize: 13, lineHeight: 19 },
   loading: { flex: 1 },
-  error: { color: '#a72e32', fontSize: 15, textAlign: 'center', lineHeight: 22 },
+  error: { color: colors.danger, fontSize: 15, textAlign: 'center', lineHeight: 22 },
   retry: { alignSelf: 'center', padding: 12 },
-  retryText: { color: '#0e7c66', fontSize: 15, fontWeight: '700' },
+  retryText: { color: colors.text, fontSize: 15, fontWeight: '700' },
 })

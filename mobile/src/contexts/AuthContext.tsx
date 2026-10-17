@@ -4,6 +4,7 @@ import { useSQLiteContext } from 'expo-sqlite'
 import { apiRequest, loginRequest } from '@/src/services/api'
 
 const TOKEN_KEY = 'calculadora-de-bordo.api-token'
+const PUSH_TOKEN_KEY = 'calculadora-de-bordo.expo-push-token'
 
 type AuthContextValue = {
   token: string | null
@@ -37,7 +38,18 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const signOut = useCallback(async () => {
     const currentToken = token
     setToken(null)
+    const savedPushToken = await SecureStore.getItemAsync(PUSH_TOKEN_KEY).catch(() => null)
     await SecureStore.deleteItemAsync(TOKEN_KEY)
+    if (currentToken && savedPushToken) {
+      try {
+        await apiRequest<void>('/notifications/device', currentToken, {
+          method: 'DELETE', body: JSON.stringify({ token: savedPushToken }),
+        })
+      } catch {
+        // O logout local continua mesmo se o servidor estiver indisponível.
+      }
+    }
+    await SecureStore.deleteItemAsync(PUSH_TOKEN_KEY)
     await db.runAsync('DELETE FROM ganhos_cache').catch((error: unknown) => {
       console.warn('Não foi possível limpar o cache local de ganhos:', error)
     })

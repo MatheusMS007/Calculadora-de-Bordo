@@ -29,7 +29,20 @@ async function request<T>(path: string, options: RequestInit = {}, token?: strin
   }
 
   const text = await response.text()
-  const payload = text ? JSON.parse(text) as Record<string, unknown> : null
+  let payload: Record<string, unknown> | null = null
+  if (text) {
+    try {
+      const parsed: unknown = JSON.parse(text)
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+        payload = parsed as Record<string, unknown>
+      }
+    } catch {
+      const message = response.ok
+        ? 'O servidor retornou uma resposta inválida.'
+        : `A API respondeu com HTTP ${response.status}. Reinicie o backend para carregar as rotas atuais.`
+      throw new Error(message)
+    }
+  }
   if (!response.ok) {
     const message = payload && typeof payload.erro === 'string' ? payload.erro : 'O servidor não conseguiu concluir a solicitação.'
     throw new Error(message)
@@ -39,6 +52,13 @@ async function request<T>(path: string, options: RequestInit = {}, token?: strin
 
 export function loginRequest(username: string, senha: string) {
   return request<LoginResponse>('/auth/login', { method: 'POST', body: JSON.stringify({ username, senha }) })
+}
+
+export function registerRequest(nome: string, username: string, senha: string) {
+  return request<{ mensagem: string; usuario: { id: number; nome: string; username: string } }>(
+    '/auth/register',
+    { method: 'POST', body: JSON.stringify({ nome, username, senha }) }
+  )
 }
 
 export function apiRequest<T>(path: string, token: string, options: RequestInit = {}) {
