@@ -1,6 +1,6 @@
 function getApiBaseUrl() {
   // Endereço do backend configurado em EXPO_PUBLIC_API_URL.
-  const value = process.env.EXPO_PUBLIC_API_URL?.trim().replace(/\/+$/, '')
+  const value = process.env.EXPO_PUBLIC_API_URL?.trim().replace(/\/+$/, '') || "http://10.6.2.67/api"
   if (!value) throw new Error('Configure EXPO_PUBLIC_API_URL no arquivo mobile/.env para conectar ao servidor.')
   return value
 }
