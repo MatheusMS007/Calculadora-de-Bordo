@@ -2,6 +2,8 @@
 
 Aplicativo React Native criado com Expo SDK 58 e Expo Router. As telas usam a API do servidor Node/Express.
 
+O código mobile usa JavaScript: arquivos `.jsx` para telas e componentes com JSX, e `.js` para módulos sem JSX.
+
 ## Configurar a API
 
 Copie `.env.example` para `.env` e ajuste `EXPO_PUBLIC_API_URL` para o endereço do servidor, sempre incluindo `/api`:

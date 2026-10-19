@@ -1,6 +1,6 @@
 import { Link, Stack } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
-import { colors } from '@/src/constants/theme'
+import { colors } from '../constants/theme'
 
 export default function NotFoundScreen() {
   return (

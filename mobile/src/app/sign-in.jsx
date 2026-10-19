@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
 import { Link } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useAuth } from '@/src/contexts/AuthContext'
-import { colors } from '@/src/constants/theme'
+import { useAuth } from '../contexts/AuthContext'
+import { colors } from '../constants/theme'
 
 export default function SignInScreen() {
   const { signIn } = useAuth()

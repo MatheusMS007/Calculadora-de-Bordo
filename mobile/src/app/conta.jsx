@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
-import { useAuth } from '@/src/contexts/AuthContext'
-import { apiRequest } from '@/src/services/api'
-import { getExpoPushToken } from '@/src/services/notifications'
-import { colors } from '@/src/constants/theme'
+import { useAuth } from '../contexts/AuthContext'
+import { apiRequest } from '../services/api'
+import { getExpoPushToken } from '../services/notifications'
+import { colors } from '../constants/theme'
 
-type AccountResponse = { usuario: { nome: string; username: string; perfil: string } }
 const PUSH_TOKEN_KEY = 'calculadora-de-bordo.expo-push-token'
 
 export default function AccountScreen() {
@@ -32,7 +31,7 @@ export default function AccountScreen() {
     setLoading(true)
     setError('')
     try {
-      const result = await apiRequest<AccountResponse>('/auth/me', token)
+      const result = await apiRequest('/auth/me', token)
       setNome(result.usuario.nome ?? '')
       setUsername(result.usuario.username)
       setPerfil(result.usuario.perfil)
@@ -101,7 +100,7 @@ export default function AccountScreen() {
     setSuccess('')
     setPushBusy(true)
     try {
-      const result = await apiRequest<{ mensagem: string }>('/notifications/test', token, { method: 'POST' })
+      const result = await apiRequest('/notifications/test', token, { method: 'POST' })
       setSuccess(result.mensagem)
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : 'Não foi possível enviar a notificação de teste.')
@@ -116,7 +115,7 @@ export default function AccountScreen() {
     setSuccess('')
     setSendingNotice(true)
     try {
-      const result = await apiRequest<{ mensagem: string }>('/notifications/admin', token, {
+      const result = await apiRequest('/notifications/admin', token, {
         method: 'POST',
         body: JSON.stringify({ title: noticeTitle.trim(), body: noticeBody.trim() }),
       })
@@ -165,7 +164,7 @@ export default function AccountScreen() {
     if (novaSenha.length < 8 || novaSenha.length > 128) return setError('A nova senha deve ter de 8 a 128 caracteres.')
     setSavingPassword(true)
     try {
-      const result = await apiRequest<{ mensagem: string }>('/auth/password', token, {
+      const result = await apiRequest('/auth/password', token, {
         method: 'PATCH', body: JSON.stringify({ senhaAtual, novaSenha }),
       })
       setSenhaAtual('')

@@ -2,10 +2,10 @@ import { useState } from 'react'
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, Vibration, View } from 'react-native'
 import { router } from 'expo-router'
 import { useSQLiteContext } from 'expo-sqlite'
-import { useAuth } from '@/src/contexts/AuthContext'
-import { cacheGanho } from '@/src/database/ganhosRepository'
-import { apiRequest } from '@/src/services/api'
-import { colors } from '@/src/constants/theme'
+import { useAuth } from '../contexts/AuthContext'
+import { cacheGanho } from '../database/ganhosRepository'
+import { apiRequest } from '../services/api'
+import { colors } from '../constants/theme'
 
 function todayAsIsoDate() {
   const today = new Date()
@@ -14,7 +14,7 @@ function todayAsIsoDate() {
   return `${today.getFullYear()}-${month}-${day}`
 }
 
-function optionalNumber(value: string) {
+function optionalNumber(value) {
   if (!value.trim()) return null
   return Number(value.trim().replace(',', '.'))
 }
@@ -42,7 +42,7 @@ export default function NovoGanhoScreen() {
         horas: optionalNumber(horas),
         km: optionalNumber(km),
       }
-      const result = await apiRequest<{ id: number; mensagem: string }>('/ganhos', token, {
+      const result = await apiRequest('/ganhos', token, {
         method: 'POST',
         body: JSON.stringify(ganho),
       })

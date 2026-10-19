@@ -1,9 +1,7 @@
-import type { SQLiteDatabase } from 'expo-sqlite'
-
 const DATABASE_VERSION = 1
 
-export async function initializeDatabase(db: SQLiteDatabase) {
-  const result = await db.getFirstAsync<{ user_version: number }>('PRAGMA user_version')
+export async function initializeDatabase(db) {
+  const result = await db.getFirstAsync('PRAGMA user_version')
   if (result && result.user_version >= DATABASE_VERSION) return
 
   await db.execAsync(`

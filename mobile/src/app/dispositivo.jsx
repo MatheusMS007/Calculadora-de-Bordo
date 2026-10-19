@@ -1,8 +1,8 @@
 import * as Device from 'expo-device'
 import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native'
-import { colors } from '@/src/constants/theme'
+import { colors } from '../constants/theme'
 
-function deviceTypeLabel(type: Device.DeviceType | null) {
+function deviceTypeLabel(type) {
   switch (type) {
     case Device.DeviceType.PHONE: return 'Celular'
     case Device.DeviceType.TABLET: return 'Tablet'
@@ -12,7 +12,7 @@ function deviceTypeLabel(type: Device.DeviceType | null) {
   }
 }
 
-function InfoRow({ label, value }: { label: string; value: string | number | null | undefined }) {
+function InfoRow({ label, value }) {
   return (
     <View style={styles.row}>
       <Text style={styles.label}>{label}</Text>

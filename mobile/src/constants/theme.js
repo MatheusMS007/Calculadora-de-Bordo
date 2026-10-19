@@ -11,4 +11,4 @@ export const colors = {
   primaryBorder: '#ffffff',
   danger: '#ff7272',
   warning: '#f2d27a',
-} as const
+}

@@ -1,9 +1,16 @@
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
+const fs = require('fs');
+
+const databasePath = process.env.DATABASE_PATH
+    ? path.resolve(process.env.DATABASE_PATH)
+    : path.resolve(__dirname, 'database.sqlite');
+
+fs.mkdirSync(path.dirname(databasePath), { recursive: true });
 
 // Cria uma conexão com o banco de dados SQLite
 const db = new sqlite3.Database(
-    path.resolve(__dirname, 'database.sqlite'),
+    databasePath,
     (err) => {
         if (err) {
             console.error('Erro ao conectar ao banco:', err.message);

@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import { Link, router } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { registerRequest } from '@/src/services/api'
-import { colors } from '@/src/constants/theme'
+import { registerRequest } from '../services/api'
+import { colors } from '../constants/theme'
 
 export default function CadastroScreen() {
   const [nome, setNome] = useState('')

@@ -1,14 +1,10 @@
-export type User = { id: number; username: string; perfil: string }
-
-type LoginResponse = { token: string; tipo: 'Bearer'; expiraEm: string; usuario: User }
-
 function getApiBaseUrl() {
   const value = process.env.EXPO_PUBLIC_API_URL?.trim().replace(/\/+$/, '')
   if (!value) throw new Error('Configure EXPO_PUBLIC_API_URL no arquivo mobile/.env para conectar ao servidor.')
   return value
 }
 
-async function request<T>(path: string, options: RequestInit = {}, token?: string): Promise<T> {
+async function request(path, options = {}, token) {
   const headers = new Headers(options.headers)
   if (options.body) headers.set('Content-Type', 'application/json')
   if (token) headers.set('Authorization', `Bearer ${token}`)
@@ -16,7 +12,7 @@ async function request<T>(path: string, options: RequestInit = {}, token?: strin
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), 12000)
 
-  let response: Response
+  let response
   try {
     response = await fetch(url, { ...options, headers, signal: controller.signal })
   } catch {
@@ -29,12 +25,12 @@ async function request<T>(path: string, options: RequestInit = {}, token?: strin
   }
 
   const text = await response.text()
-  let payload: Record<string, unknown> | null = null
+  let payload = null
   if (text) {
     try {
-      const parsed: unknown = JSON.parse(text)
+      const parsed = JSON.parse(text)
       if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-        payload = parsed as Record<string, unknown>
+        payload = parsed
       }
     } catch {
       const message = response.ok
@@ -47,20 +43,20 @@ async function request<T>(path: string, options: RequestInit = {}, token?: strin
     const message = payload && typeof payload.erro === 'string' ? payload.erro : 'O servidor não conseguiu concluir a solicitação.'
     throw new Error(message)
   }
-  return payload as T
+  return payload
 }
 
-export function loginRequest(username: string, senha: string) {
-  return request<LoginResponse>('/auth/login', { method: 'POST', body: JSON.stringify({ username, senha }) })
+export function loginRequest(username, senha) {
+  return request('/auth/login', { method: 'POST', body: JSON.stringify({ username, senha }) })
 }
 
-export function registerRequest(nome: string, username: string, senha: string) {
-  return request<{ mensagem: string; usuario: { id: number; nome: string; username: string } }>(
+export function registerRequest(nome, username, senha) {
+  return request(
     '/auth/register',
     { method: 'POST', body: JSON.stringify({ nome, username, senha }) }
   )
 }
 
-export function apiRequest<T>(path: string, token: string, options: RequestInit = {}) {
-  return request<T>(path, options, token)
+export function apiRequest(path, token, options = {}) {
+  return request(path, options, token)
 }

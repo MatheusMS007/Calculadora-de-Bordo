@@ -1,18 +1,13 @@
 import { useCallback, useState } from 'react'
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { Link, useFocusEffect } from 'expo-router'
-import { useAuth } from '@/src/contexts/AuthContext'
-import { apiRequest } from '@/src/services/api'
-import { colors } from '@/src/constants/theme'
-
-type DashboardData = {
-  usuario: { username: string; nome?: string }
-  resumo: { totalRegistros: number; totalGanhos: number }
-}
+import { useAuth } from '../../contexts/AuthContext'
+import { apiRequest } from '../../services/api'
+import { colors } from '../../constants/theme'
 
 export default function DashboardScreen() {
   const { token, signOut } = useAuth()
-  const [dashboard, setDashboard] = useState<DashboardData | null>(null)
+  const [dashboard, setDashboard] = useState(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
 
@@ -21,7 +16,7 @@ export default function DashboardScreen() {
     setLoading(true)
     setError('')
     try {
-      const result = await apiRequest<DashboardData>('/dashboard', token)
+      const result = await apiRequest('/dashboard', token)
       setDashboard(result)
     } catch (requestError) {
       const message = requestError instanceof Error ? requestError.message : 'Não foi possível carregar o resumo dos ganhos.'

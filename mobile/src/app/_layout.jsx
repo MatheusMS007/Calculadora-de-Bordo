@@ -3,9 +3,9 @@ import * as Notifications from 'expo-notifications'
 import { ActivityIndicator, StyleSheet, View } from 'react-native'
 import { SQLiteProvider } from 'expo-sqlite'
 import { StatusBar } from 'expo-status-bar'
-import { AuthProvider, useAuth } from '@/src/contexts/AuthContext'
-import { initializeDatabase } from '@/src/database/database'
-import { colors } from '@/src/constants/theme'
+import { AuthProvider, useAuth } from '../contexts/AuthContext'
+import { initializeDatabase } from '../database/database'
+import { colors } from '../constants/theme'
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({

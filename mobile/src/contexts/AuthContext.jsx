@@ -1,23 +1,16 @@
-import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import * as SecureStore from 'expo-secure-store'
 import { useSQLiteContext } from 'expo-sqlite'
-import { apiRequest, loginRequest } from '@/src/services/api'
+import { apiRequest, loginRequest } from '../services/api'
 
 const TOKEN_KEY = 'calculadora-de-bordo.api-token'
 const PUSH_TOKEN_KEY = 'calculadora-de-bordo.expo-push-token'
 
-type AuthContextValue = {
-  token: string | null
-  isLoading: boolean
-  signIn: (username: string, senha: string) => Promise<void>
-  signOut: () => Promise<void>
-}
+const AuthContext = createContext(null)
 
-const AuthContext = createContext<AuthContextValue | null>(null)
-
-export function AuthProvider({ children }: PropsWithChildren) {
+export function AuthProvider({ children }) {
   const db = useSQLiteContext()
-  const [token, setToken] = useState<string | null>(null)
+  const [token, setToken] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -29,7 +22,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     return () => { isMounted = false }
   }, [])
 
-  const signIn = useCallback(async (username: string, senha: string) => {
+  const signIn = useCallback(async (username, senha) => {
     const session = await loginRequest(username, senha)
     await SecureStore.setItemAsync(TOKEN_KEY, session.token)
     setToken(session.token)
@@ -42,7 +35,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     await SecureStore.deleteItemAsync(TOKEN_KEY)
     if (currentToken && savedPushToken) {
       try {
-        await apiRequest<void>('/notifications/device', currentToken, {
+        await apiRequest('/notifications/device', currentToken, {
           method: 'DELETE', body: JSON.stringify({ token: savedPushToken }),
         })
       } catch {
@@ -50,12 +43,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
       }
     }
     await SecureStore.deleteItemAsync(PUSH_TOKEN_KEY)
-    await db.runAsync('DELETE FROM ganhos_cache').catch((error: unknown) => {
+    await db.runAsync('DELETE FROM ganhos_cache').catch((error) => {
       console.warn('Não foi possível limpar o cache local de ganhos:', error)
     })
     if (currentToken) {
       try {
-        await apiRequest<void>('/auth/logout', currentToken, { method: 'POST' })
+        await apiRequest('/auth/logout', currentToken, { method: 'POST' })
       } catch {
         // O token local já foi removido; a expiração do servidor encerra a sessão restante.
       }

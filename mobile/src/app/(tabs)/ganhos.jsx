@@ -2,12 +2,12 @@ import { useCallback, useState } from 'react'
 import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import { Link, useFocusEffect } from 'expo-router'
 import { useSQLiteContext } from 'expo-sqlite'
-import { useAuth } from '@/src/contexts/AuthContext'
-import { getCachedGanhos, replaceCachedGanhos, type Ganho } from '@/src/database/ganhosRepository'
-import { apiRequest } from '@/src/services/api'
-import { colors } from '@/src/constants/theme'
+import { useAuth } from '../../contexts/AuthContext'
+import { getCachedGanhos, replaceCachedGanhos } from '../../database/ganhosRepository'
+import { apiRequest } from '../../services/api'
+import { colors } from '../../constants/theme'
 
-function formatDate(value: string) {
+function formatDate(value) {
   const [year, month, day] = value.split('-')
   return `${day}/${month}/${year}`
 }
@@ -15,7 +15,7 @@ function formatDate(value: string) {
 export default function GanhosScreen() {
   const db = useSQLiteContext()
   const { token, signOut } = useAuth()
-  const [ganhos, setGanhos] = useState<Ganho[]>([])
+  const [ganhos, setGanhos] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [offline, setOffline] = useState(false)
@@ -25,7 +25,7 @@ export default function GanhosScreen() {
     setLoading(true)
     setError('')
     setOffline(false)
-    let cached: Ganho[] = []
+    let cached = []
     try {
       cached = await getCachedGanhos(db)
       setGanhos(cached)
@@ -34,7 +34,7 @@ export default function GanhosScreen() {
     }
 
     try {
-      const result = await apiRequest<{ ganhos: Ganho[] }>('/ganhos', token)
+      const result = await apiRequest('/ganhos', token)
       setGanhos(result.ganhos)
       try {
         await replaceCachedGanhos(db, result.ganhos)
