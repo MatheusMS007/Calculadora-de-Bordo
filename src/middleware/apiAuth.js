@@ -2,9 +2,11 @@ const crypto = require('crypto')
 const apiTokenModel = require('../models/apiTokenModel')
 
 function hashToken(token) {
+    // Guarda no banco apenas o hash do token, não o valor original.
     return crypto.createHash('sha256').update(token).digest('hex')
 }
 
+// Exige um Bearer token válido e disponibiliza o usuário nas rotas protegidas.
 function requireApiAuth(req, res, next) {
     const authorization = req.get('authorization') || ''
     const match = authorization.match(/^Bearer\s+(.+)$/i)

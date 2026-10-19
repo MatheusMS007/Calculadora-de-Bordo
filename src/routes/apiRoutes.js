@@ -11,6 +11,7 @@ const { hashPassword, verifyPassword, isLegacyPassword } = require('../utils/pas
 
 const TOKEN_LIFETIME_MS = 30 * 24 * 60 * 60 * 1000
 
+// Cria uma conta de usuário com senha protegida por hash.
 router.post('/auth/register', async (req, res) => {
     const { nome, username, senha } = req.body
     const nomeNormalizado = typeof nome === 'string' ? nome.trim() : ''
@@ -55,6 +56,7 @@ router.post('/auth/register', async (req, res) => {
     })
 })
 
+// Valida as credenciais e emite um token Bearer válido por 30 dias.
 router.post('/auth/login', (req, res) => {
     const { username, senha } = req.body
     if (typeof username !== 'string' || typeof senha !== 'string' || !username.trim() || !senha) {
@@ -113,6 +115,7 @@ router.post('/auth/login', (req, res) => {
     })
 })
 
+// Invalida o token da sessão atual.
 router.post('/auth/logout', requireApiAuth, (req, res) => {
     apiTokenModel.delete(req.apiTokenHash, (err) => {
         if (err) {
@@ -123,6 +126,7 @@ router.post('/auth/logout', requireApiAuth, (req, res) => {
     })
 })
 
+// Associa o aparelho autenticado ao serviço de notificações push.
 router.post('/notifications/device', requireApiAuth, (req, res) => {
     const { token, platform, deviceName } = req.body
     if (typeof token !== 'string' || !/^(Expo|Exponent)PushToken\[[A-Za-z0-9_-]+\]$/.test(token) ||
@@ -140,6 +144,7 @@ router.post('/notifications/device', requireApiAuth, (req, res) => {
     })
 })
 
+// Remove o aparelho autenticado dos destinatários de notificações push.
 router.delete('/notifications/device', requireApiAuth, (req, res) => {
     const { token } = req.body
     if (typeof token !== 'string' || !/^(Expo|Exponent)PushToken\[[A-Za-z0-9_-]+\]$/.test(token)) {
@@ -155,6 +160,7 @@ router.delete('/notifications/device', requireApiAuth, (req, res) => {
     })
 })
 
+// Envia uma notificação de teste aos aparelhos do usuário autenticado.
 router.post('/notifications/test', requireApiAuth, (req, res) => {
     pushTokenModel.findByUser(req.apiUsuario.id, async (err, devices) => {
         if (err) {
@@ -184,6 +190,7 @@ router.post('/notifications/test', requireApiAuth, (req, res) => {
     })
 })
 
+// Envia um aviso push a todos os aparelhos registrados; somente para administradores.
 router.post('/notifications/admin', requireApiAuth, (req, res) => {
     if (req.apiUsuario.perfil !== 'admin') {
         return res.status(403).json({ erro: 'Somente administradores podem enviar avisos.' })
@@ -228,10 +235,12 @@ router.post('/notifications/admin', requireApiAuth, (req, res) => {
     })
 })
 
+// Retorna os dados da conta autenticada.
 router.get('/auth/me', requireApiAuth, (req, res) => {
     res.json({ usuario: req.apiUsuario })
 })
 
+// Atualiza o nome do usuário autenticado.
 router.patch('/auth/profile', requireApiAuth, (req, res) => {
     const nome = typeof req.body.nome === 'string' ? req.body.nome.trim() : ''
     if (!nome || nome.length > 100) {
@@ -248,6 +257,7 @@ router.patch('/auth/profile', requireApiAuth, (req, res) => {
     })
 })
 
+// Confere a senha atual e salva a nova senha protegida por hash.
 router.patch('/auth/password', requireApiAuth, (req, res) => {
     const { senhaAtual, novaSenha } = req.body
     if (typeof senhaAtual !== 'string' || !senhaAtual || typeof novaSenha !== 'string' ||
@@ -280,6 +290,7 @@ router.patch('/auth/password', requireApiAuth, (req, res) => {
     })
 })
 
+// Retorna os dados do usuário e o resumo dos ganhos.
 router.get('/dashboard', requireApiAuth, (req, res) => {
     ganhoModel.getResumoByUser(req.apiUsuario.id, (err, resumo) => {
         if (err) {
@@ -290,6 +301,7 @@ router.get('/dashboard', requireApiAuth, (req, res) => {
     })
 })
 
+// Lista os ganhos pertencentes ao usuário autenticado.
 router.get('/ganhos', requireApiAuth, (req, res) => {
     ganhoModel.findByUser(req.apiUsuario.id, (err, ganhos) => {
         if (err) {
@@ -300,6 +312,7 @@ router.get('/ganhos', requireApiAuth, (req, res) => {
     })
 })
 
+// Valida e registra um ganho para o usuário autenticado.
 router.post('/ganhos', requireApiAuth, (req, res) => {
     const { data, plataforma, valor, horas, km } = req.body
     const valorNumerico = Number(valor)

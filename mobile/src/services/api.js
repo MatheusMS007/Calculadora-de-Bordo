@@ -1,10 +1,12 @@
 function getApiBaseUrl() {
+  // Endereço do backend configurado em EXPO_PUBLIC_API_URL.
   const value = process.env.EXPO_PUBLIC_API_URL?.trim().replace(/\/+$/, '')
   if (!value) throw new Error('Configure EXPO_PUBLIC_API_URL no arquivo mobile/.env para conectar ao servidor.')
   return value
 }
 
 async function request(path, options = {}, token) {
+  // Centraliza as chamadas HTTP, autenticação Bearer, timeout e tratamento de erros.
   const headers = new Headers(options.headers)
   if (options.body) headers.set('Content-Type', 'application/json')
   if (token) headers.set('Authorization', `Bearer ${token}`)
@@ -47,10 +49,12 @@ async function request(path, options = {}, token) {
 }
 
 export function loginRequest(username, senha) {
+  // Autentica o usuário e recebe o token de acesso.
   return request('/auth/login', { method: 'POST', body: JSON.stringify({ username, senha }) })
 }
 
 export function registerRequest(nome, username, senha) {
+  // Cria uma conta no backend.
   return request(
     '/auth/register',
     { method: 'POST', body: JSON.stringify({ nome, username, senha }) }
@@ -58,5 +62,6 @@ export function registerRequest(nome, username, senha) {
 }
 
 export function apiRequest(path, token, options = {}) {
+  // Faz chamadas autenticadas para os demais endpoints da API.
   return request(path, options, token)
 }
